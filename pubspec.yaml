@@ -1,0 +1,41 @@
+name: HeartAI
+description: A new Flutter project.
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+  loading_animation_widget: ^1.2.0+4
+  http: ^0.13.5
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.2.19
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter_icons:       
+  android: true
+  ios: true
+  image_path: "assets/Icon-60.png"
+
+  flutter_lints: ^2.0.0
+
+flutter_native_splash:
+  color: "#448aff"
+  image: assets/splash.png
+  android: true
+  ios: true
+
+flutter:
+
+  uses-material-design: true

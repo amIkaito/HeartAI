@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../main.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
-  static const String _apiKey =
-      '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';
+  String? apiKey = dotenv.env['apiKey'];
   static const String _apiEndpoint =
       'https://api.openai.com/v1/chat/completions';
 
@@ -62,7 +63,7 @@ class ApiService {
   Future<String> getGptResponse(List<Map<String, String>> messages) async {
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $_apiKey'
+      'Authorization': 'Bearer $apiKey'
     };
 
     print('Messages: $messages');

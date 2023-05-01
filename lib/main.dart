@@ -3,8 +3,11 @@ import 'api_service.dart';
 import 'Tabbar/date_planning.dart';
 import 'Tabbar/love_advice.dart'; // 追加: import LoveAdvicePage
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   runApp(MyApp());
 }
 

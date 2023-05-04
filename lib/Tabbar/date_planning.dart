@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../api_service.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class DatePlanningInputFields extends StatefulWidget {
   final ApiService apiService;
@@ -33,9 +34,34 @@ class _DatePlanningInputFieldsState extends State<DatePlanningInputFields> {
   String? _selectedDatePurpose = null;
   String? _selectedBudget = null;
 
+  bool _isAdLoaded = false;
+  RewardedAd? _rewardedAd;
+
   @override
   void initState() {
     super.initState();
+    _loadRewardedAd();
+  }
+
+  Future<void> _loadRewardedAd() async {
+    RewardedAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          setState(() {
+            _rewardedAd = ad;
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('RewardedAd failed to load: $error');
+          setState(() {
+            _isAdLoaded = false;
+          });
+        },
+      ),
+    );
   }
 
   @override
@@ -691,10 +717,16 @@ class _DatePlanningInputFieldsState extends State<DatePlanningInputFields> {
                     SizedBox(height: 16),
                     Center(
                       child: ElevatedButton(
-                        onPressed: _isLoading
+                        onPressed: _isLoading || !_isAdLoaded
                             ? null
                             : () async {
-                                await _sendRequest();
+                                if (_isAdLoaded) {
+                                  _rewardedAd!.show(onUserEarnedReward:
+                                      (AdWithoutView ad, RewardItem reward) {
+                                    // 広告が終了したら、ロジックを実行
+                                    _sendRequest();
+                                  });
+                                }
                               },
                         child: Text('デートプランニングしてもらう'),
                         style: ElevatedButton.styleFrom(

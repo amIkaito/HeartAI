@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../api_service.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class LoveAdvicePage extends StatefulWidget {
   @override
@@ -32,6 +33,9 @@ class _LoveAdvicePageState extends State<LoveAdvicePage>
   bool _loading = false;
   String? dropdownValue;
 
+  late RewardedAd _rewardedAd;
+  bool _isAdLoaded = false;
+
   Map<String, String> loveAdviceTemplates = {
     'アプローチ方法についての相談':
         '相談内容: アプローチ方法\n好きな人の性格や関係性: [入力してください]\n現在のアプローチ方法: [入力してください]\n自分の性格や特徴: [ユーザー入力]\n質問: このアプローチ方法で大丈夫ですか？他に何かアドバイスがありますか？',
@@ -50,7 +54,77 @@ class _LoveAdvicePageState extends State<LoveAdvicePage>
   @override
   void initState() {
     super.initState();
+    _createAndLoadRewardedAd();
     _tabController = TabController(vsync: this, length: 2);
+  }
+
+  void _createAndLoadRewardedAd() {
+    RewardedAd.load(
+      adUnitId:
+          'ca-app-pub-3940256099942544/5224354917', // これはテスト用の広告ユニットIDです。実際のアプリでは、AdMobの広告ユニットIDに置き換えてください。
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          print('${ad.runtimeType} loaded.');
+          setState(() {
+            _isAdLoaded = true;
+            _rewardedAd = ad;
+          });
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (Ad ad) =>
+                print('${ad.runtimeType} opened.'),
+            onAdDismissedFullScreenContent: (Ad ad) {
+              print('${ad.runtimeType} closed.');
+              ad.dispose();
+              _createAndLoadRewardedAd();
+            },
+            onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+              print('${ad.runtimeType} failed to show: $error');
+              ad.dispose();
+              _createAndLoadRewardedAd();
+            },
+            onAdImpression: (Ad ad) =>
+                print('${ad.runtimeType} onAdImpression.'),
+          );
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('RewardedAd failed to load: $error');
+          _createAndLoadRewardedAd();
+        },
+      ),
+    );
+  }
+
+  void _onUserEarnedReward(Ad ad, RewardItem reward) {
+    // 広告が終了したら、上記で説明したロジックを実行
+    _sendRequest((inputText) => widget.apiService.getLoveAdvice(inputText));
+
+    // 相談内容をリセット
+    _inputController.clear();
+  }
+
+  void _showRewardedAd() {
+    if (_isAdLoaded) {
+      _rewardedAd.show(onUserEarnedReward: _onUserEarnedReward);
+      setState(() {
+        _isAdLoaded = false;
+      });
+
+      _rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (Ad ad) =>
+            print('${ad.runtimeType} opened.'),
+        onAdDismissedFullScreenContent: (Ad ad) {
+          print('${ad.runtimeType} closed.');
+          ad.dispose();
+          _createAndLoadRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+          print('${ad.runtimeType} failed to show: $error');
+          ad.dispose();
+          _createAndLoadRewardedAd();
+        },
+      );
+    }
   }
 
   @override
@@ -280,14 +354,21 @@ class _LoveAdvicePageState extends State<LoveAdvicePage>
               SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: _loading // _loadingがtrueの場合、ボタンを無効化する
+                  onPressed: !_isAdLoaded // _isAdLoadedがfalseの場合、ボタンを無効化する
                       ? null
                       : () async {
-                          await _sendRequest((inputText) =>
-                              widget.apiService.getLoveAdvice(inputText));
+                          // 広告が読み込まれている場合に広告を表示
+                          if (_isAdLoaded) {
+                            _rewardedAd.show(onUserEarnedReward:
+                                (AdWithoutView ad, RewardItem reward) {
+                              // 広告が終了したら、上記で説明したロジックを実行
+                              _sendRequest((inputText) =>
+                                  widget.apiService.getLoveAdvice(inputText));
 
-                          // 相談内容をリセット
-                          _inputController.clear();
+                              // 相談内容をリセット
+                              _inputController.clear();
+                            });
+                          }
                         },
                   child: Text('恋愛相談する'),
                   style: ElevatedButton.styleFrom(

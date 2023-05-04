@@ -4,9 +4,11 @@ import 'Tabbar/date_planning.dart';
 import 'Tabbar/love_advice.dart'; // 追加: import LoveAdvicePage
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await dotenv.load(fileName: '.env');
   runApp(MyApp());
 }

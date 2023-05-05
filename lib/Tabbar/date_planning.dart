@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../api_service.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:async';
 
 class DatePlanningInputFields extends StatefulWidget {
   final ApiService apiService;
@@ -44,8 +45,8 @@ class _DatePlanningInputFieldsState extends State<DatePlanningInputFields> {
   }
 
   Future<void> _loadRewardedAd() async {
-    RewardedAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+    await RewardedAd.load(
+      adUnitId: 'ca-app-pub-9865937754205715/7493401421',
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {

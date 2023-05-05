@@ -60,8 +60,7 @@ class _LoveAdvicePageState extends State<LoveAdvicePage>
 
   void _createAndLoadRewardedAd() {
     RewardedAd.load(
-      adUnitId:
-          'ca-app-pub-3940256099942544/5224354917', // これはテスト用の広告ユニットIDです。実際のアプリでは、AdMobの広告ユニットIDに置き換えてください。
+      adUnitId: 'ca-app-pub-9865937754205715/7493401421',
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
@@ -354,15 +353,16 @@ class _LoveAdvicePageState extends State<LoveAdvicePage>
               SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: !_isAdLoaded // _isAdLoadedがfalseの場合、ボタンを無効化する
+                  onPressed: !_isAdLoaded ||
+                          _loading // _isAdLoadedがfalseまたは_loadingがtrueの場合、ボタンを無効化する
                       ? null
                       : () async {
                           // 広告が読み込まれている場合に広告を表示
                           if (_isAdLoaded) {
                             _rewardedAd.show(onUserEarnedReward:
-                                (AdWithoutView ad, RewardItem reward) {
+                                (AdWithoutView ad, RewardItem reward) async {
                               // 広告が終了したら、上記で説明したロジックを実行
-                              _sendRequest((inputText) =>
+                              await _sendRequest((inputText) =>
                                   widget.apiService.getLoveAdvice(inputText));
 
                               // 相談内容をリセット

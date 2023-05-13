@@ -1,17 +1,43 @@
-# ai_love
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 # HeartAI
+
+HeartAIは、AI技術を活用した恋愛相談とデートプランニングアプリです。ユーザーの質問や悩みに対してアドバイスを提供し、デートの計画を簡単に立てることができます。
+
+## 主な機能
+
+1. **AIに基づく恋愛相談**：幅広いテーマの恋愛相談に対応します。
+2. **デートプランニング**：ユーザーの入力に基づいてデートプランを提案します。
+
+## 使用技術
+
+- Flutter
+- cupertino_icons: ^1.0.5
+- loading_animation_widget: ^1.2.0+4
+- http: ^0.13.5
+- flutter_launcher_icons: ^0.13.1
+- flutter_native_splash: ^2.2.19
+- flutter_dotenv: ^5.0.2
+- google_mobile_ads: ^3.0.0
+- app_tracking_transparency: ^2.0.4
+
+## インストール方法
+
+1. GitHubからリポジトリをクローンします。
+2. Flutterをインストールします。
+3. プロジェクトのルートディレクトリで`flutter pub get`を実行します。
+4. アプリをビルドして実行します。
+
+## 使用方法
+
+1. アプリを開きます。
+2. 必要に応じて質問を入力またはデートの詳細を入力します。
+3. AIからのアドバイスを受け取ります。
+
+## 開発の背景
+
+HeartAIの開発は、私が日常生活の中で直面していた一つの問題から始まりました。それは、"恋愛相談を身軽に、そして具体的な解決策や参考にできるアプローチを得ることができる場があれば、パートナー候補やパートナーと円滑にコミュニケーションが取れるのではないか"という課題でした。
+
+この問題解決に向けて、私はAI技術の活用に注目しました。AIは学習能力と予測能力を持ち、ユーザーの質問や悩みに対してアドバイスを提供することができると考えました。これにより、ユーザーは自分だけの恋愛コンサルタントを持つことができ、より良い恋愛体験を得ることができます。
+
+そうして生まれたのがHeartAIです。HeartAIは、ユーザーの恋愛相談に対応し、デートの計画を簡単に立てることができるアプリです。これにより、恋愛の問題解決を手助けし、ユーザーがパートナーとのコミュニケーションを円滑に進めることができるようになることを目指しています。
+
+
